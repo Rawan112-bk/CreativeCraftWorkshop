@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Workshop Registration</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<!-- Navigation -->
+<nav>
+    <div class="logo">Craft Workshop</div>
+</nav>
+
+<!-- Booking Title -->
+<section class="booking-header">
+    <h1 id="workshopTitle">Workshop Booking</h1>
+</section>
+
+<!-- Form Section -->
+<section class="form-section">
+
+    <div class="form-box">
+
+        <!-- Back Button -->
+        <button onclick="goBack()" class="btn back-btn">← Back</button>
+
+        <div class="info-box">
+            <p>Fill in your details to reserve your spot in the workshop.</p>
+        </div>
+
+        <!-- ✅ FIXED HEADING LEVEL -->
+        <h2>Your Personal Information</h2>
+
+        <form class="workshop-form">
+
+            <!-- Full Name -->
+            <label>Full Name</label>
+            <input type="text" placeholder="e.g. Sara Ahmed" required minlength="3">
+
+            <!-- Email -->
+            <label>Email</label>
+            <input type="email" placeholder="e.g. sara@email.com" required>
+
+            <!-- Mobile -->
+            <label>Mobile Number</label>
+            <input type="tel" placeholder="e.g. 05XXXXXXXX" pattern="[0-9]{10}" required>
+
+            <!-- Workshop -->
+            <label>Workshop</label>
+            <input type="text" id="workshopInput" readonly>
+
+            <!-- Gender -->
+            <label>Gender</label>
+            <div class="gender-group">
+                <label><input type="radio" name="gender" value="male" required> Male</label>
+                <label><input type="radio" name="gender" value="female"> Female</label>
+            </div>
+
+            <!-- Date -->
+            <label>Preferred Date</label>
+            <input type="date" required>
+
+            <!-- Time -->
+            <label>Preferred Time</label>
+            <input type="time" required>
+
+            <!-- Notes -->
+            <label>Additional Notes</label>
+            <textarea placeholder="Any special requests..."></textarea>
+
+            <!-- Buttons -->
+            <div class="form-buttons">
+                <button type="submit" class="btn">Submit</button>
+                <button type="reset" class="btn">Reset</button>
+            </div>
+
+        </form>
+
+    </div>
+
+</section>
+
+<!-- Footer -->
+<footer>
+    <p>&copy; 2026 Craft Workshop</p>
+</footer>
+
+<script>
+function goBack() {
+    window.history.back();
+}
+
+const params = new URLSearchParams(window.location.search);
+const type = params.get("type");
+
+let title = "Workshop Booking";
+
+if (type === "candle") {
+    title = "Candle Making Booking";
+} else if (type === "pottery") {
+    title = "Pottery Workshop Booking";
+} else if (type === "painting") {
+    title = "Painting Workshop Booking";
+}
+
+document.getElementById("workshopTitle").innerText = title;
+document.getElementById("workshopInput").value = title;
+</script>
+
+</body>
+</html>
