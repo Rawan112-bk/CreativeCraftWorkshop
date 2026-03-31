@@ -10,13 +10,19 @@
 <body>
 
 <!-- Navigation -->
-<nav>
+<nav class="navbar">
     <div class="logo">Craft Workshop</div>
+    <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="workshops.html">Workshops</a></li>
+        <li><a href="booking.html">Booking</a></li>
+        <li><a href="contact.html">Contact</a></li>
+    </ul>
 </nav>
 
 <!-- Booking Title -->
 <section class="booking-header">
-    <h1 id="workshopTitle">Workshop Booking</h1>
+    <h1>Workshop Booking</h1>
 </section>
 
 <!-- Form Section -->
@@ -24,14 +30,12 @@
 
     <div class="form-box">
 
-        <!-- Back Button -->
-        <button onclick="goBack()" class="btn back-btn">← Back</button>
+        <span class="btn back-btn">← Back</span>
 
         <div class="info-box">
             <p>Fill in your details to reserve your spot in the workshop.</p>
         </div>
 
-        <!-- ✅ FIXED HEADING LEVEL -->
         <h2>Your Personal Information</h2>
 
         <form class="workshop-form">
@@ -50,7 +54,12 @@
 
             <!-- Workshop -->
             <label>Workshop</label>
-            <input type="text" id="workshopInput" readonly>
+            <select required>
+                <option value="">Select a workshop</option>
+                <option value="candle">Candle Making</option>
+                <option value="pottery">Pottery Workshop</option>
+                <option value="painting">Painting Workshop</option>
+            </select>
 
             <!-- Gender -->
             <label>Gender</label>
@@ -78,7 +87,6 @@
             </div>
 
         </form>
-
     </div>
 
 </section>
@@ -87,28 +95,6 @@
 <footer>
     <p>&copy; 2026 Craft Workshop</p>
 </footer>
-
-<script>
-function goBack() {
-    window.history.back();
-}
-
-const params = new URLSearchParams(window.location.search);
-const type = params.get("type");
-
-let title = "Workshop Booking";
-
-if (type === "candle") {
-    title = "Candle Making Booking";
-} else if (type === "pottery") {
-    title = "Pottery Workshop Booking";
-} else if (type === "painting") {
-    title = "Painting Workshop Booking";
-}
-
-document.getElementById("workshopTitle").innerText = title;
-document.getElementById("workshopInput").value = title;
-</script>
 
 </body>
 </html>
