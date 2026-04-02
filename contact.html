@@ -1,155 +1,98 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Contact Us</title>
-
-    <!-- Main stylesheet -->
     <link rel="stylesheet" href="style.css">
-
-    <!-- Google font -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
 </head>
+
 <body>
 
-    <!-- Navigation bar -->
-    <nav>
-        <div class="logo">Craft Workshop</div>
+<!-- Navigation -->
+<nav class="navbar">
+    <div class="logo">Craft Workshop</div>
+    <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="workshops.html">Workshops</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="contact.html">Contact</a></li>
+    </ul>
+</nav>
 
-        <ul class="nav-links">
-            <li><a href="index.html">Home</a></li>
-            <li><a href="workshops.html">Workshops</a></li>
-            <li><a href="register.html">Register</a></li>
-            <li><a href="contact.html">Contact</a></li>
-        </ul>
-    </nav>
+<!-- Title -->
+<section class="booking-header">
+    <h1>Contact Us</h1>
+</section>
 
-    <!-- Contact page header -->
-    <section class="contact-header">
-        <h1>Contact Us</h1>
-        <p>We’d love to hear from you. Fill out the form below and send us your message.</p>
-    </section>
+<!-- Form Section -->
+<section class="form-section">
 
-    <!-- Contact form section -->
-    <section class="form-section">
-        <div class="form-box">
-            <h2>Your Information</h2>
+    <div class="form-box">
 
-            <form class="workshop-form" action="#" method="post">
-
-                <!-- First name -->
-                <div>
-                    <label for="firstName">First Name</label>
-                    <input
-                        type="text"
-                        id="firstName"
-                        name="firstName"
-                        placeholder="Enter your first name"
-                        required
-                    >
-                </div>
-
-                <!-- Last name -->
-                <div>
-                    <label for="lastName">Last Name</label>
-                    <input
-                        type="text"
-                        id="lastName"
-                        name="lastName"
-                        placeholder="Enter your last name"
-                        required
-                    >
-                </div>
-
-                <!-- Gender radio buttons -->
-                <div>
-                    <label>Gender</label>
-                    <div class="gender-options">
-                        <label class="radio-label">
-                            <input type="radio" name="gender" value="female" required>
-                            Female
-                        </label>
-
-                        <label class="radio-label">
-                            <input type="radio" name="gender" value="male" required>
-                            Male
-                        </label>
-                    </div>
-                </div>
-
-                <!-- Mobile number -->
-                <div>
-                    <label for="mobile">Mobile Number</label>
-                    <input
-                        type="tel"
-                        id="mobile"
-                        name="mobile"
-                        placeholder="05XXXXXXXX"
-                        pattern="[0-9]{10}"
-                        required
-                    >
-                </div>
-
-                <!-- Date of birth -->
-                <div>
-                    <label for="dob">Date of Birth</label>
-                    <input
-                        type="date"
-                        id="dob"
-                        name="dob"
-                        required
-                    >
-                </div>
-
-                <!-- Email address -->
-                <div>
-                    <label for="email">Email Address</label>
-                    <input
-                        type="email"
-                        id="email"
-                        name="email"
-                        placeholder="example@email.com"
-                        required
-                    >
-                </div>
-
-                <!-- Language selection -->
-                <div class="full-width">
-                    <label for="language">Language of Communication</label>
-                    <select id="language" name="language" required>
-                        <option value="">Select language</option>
-                        <option value="arabic">Arabic</option>
-                        <option value="english">English</option>
-                        <option value="french">French</option>
-                    </select>
-                </div>
-
-                <!-- Message box -->
-                <div class="full-width">
-                    <label for="message">Message</label>
-                    <textarea
-                        id="message"
-                        name="message"
-                        placeholder="Write your message here..."
-                        required
-                    ></textarea>
-                </div>
-
-                <!-- Form buttons -->
-                <div class="form-buttons">
-                    <button type="submit" class="btn">Send Message</button>
-                    <button type="reset" class="btn">Reset</button>
-                </div>
-
-            </form>
+        <div class="info-box">
+            <p>We’d love to hear from you. Fill out the form below and send us your message.</p>
         </div>
-    </section>
 
-    <!-- Footer -->
-    <footer>
-        <p>&copy; 2026 Craft Workshop. All rights reserved.</p>
-    </footer>
+        <h2>Your Information</h2>
+
+        <form class="workshop-form">
+
+            <!-- First Name -->
+            <label>First Name</label>
+            <input type="text" placeholder="e.g. Sara" required>
+
+            <!-- Last Name -->
+            <label>Last Name</label>
+            <input type="text" placeholder="e.g. Ahmed" required>
+
+            <!-- Email -->
+            <label>Email</label>
+            <input type="email" placeholder="e.g. sara@email.com" required>
+
+            <!-- Mobile -->
+            <label>Mobile Number</label>
+            <input type="tel" placeholder="05XXXXXXXX" pattern="[0-9]{10}" required>
+
+            <!-- Date of Birth -->
+            <label>Date of Birth</label>
+            <input type="date" required>
+
+            <!-- Gender -->
+            <label>Gender</label>
+            <div class="gender-group">
+                <label><input type="radio" name="gender" value="male" required> Male</label>
+                <label><input type="radio" name="gender" value="female"> Female</label>
+            </div>
+
+            <!-- Language -->
+            <label>Language of Communication</label>
+            <select required>
+                <option value="">Select language</option>
+                <option value="arabic">Arabic</option>
+                <option value="english">English</option>
+                <option value="french">French</option>
+            </select>
+
+            <!-- Message -->
+            <label>Message</label>
+            <textarea placeholder="Write your message here..." rows="5" required></textarea>
+
+            <!-- Buttons -->
+            <div class="form-buttons">
+                <button type="submit" class="btn">Send Message</button>
+                <button type="reset" class="btn">Reset</button>
+            </div>
+
+        </form>
+    </div>
+
+</section>
+
+<!-- Footer -->
+<footer>
+    <p>&copy; 2026 Craft Workshop</p>
+</footer>
 
 </body>
 </html>
