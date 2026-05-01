@@ -9,9 +9,10 @@
 
 <body>
 
-<!-- Navigation -->
+<!-- ================= NAVIGATION ================= -->
 <nav class="navbar">
     <div class="logo">Craft Workshop</div>
+
     <ul class="nav-links">
         <li><a href="index.html">Home</a></li>
         <li><a href="workshops.html">Workshops</a></li>
@@ -20,12 +21,12 @@
     </ul>
 </nav>
 
-<!-- Title -->
+<!-- ================= HEADER ================= -->
 <section class="booking-header">
     <h1>Contact Us</h1>
 </section>
 
-<!-- Form Section -->
+<!-- ================= FORM ================= -->
 <section class="form-section">
 
     <div class="form-box">
@@ -36,61 +37,89 @@
 
         <h2>Your Information</h2>
 
-         <form class="workshop-form" id="contactForm" novalidate>
+        <form class="workshop-form" id="contactForm" novalidate>
+
             <!-- First Name -->
-            <label>First Name</label>
-            <input type="text" name="fname" placeholder="e.g. Sara" required>
+            <div>
+                <label>First Name</label>
+                <input type="text" name="fname" placeholder="e.g. Sara">
+            </div>
+
             <!-- Last Name -->
-            <label>Last Name</label>
-           <input type="text" name="lname" placeholder="e.g. Ahmed" required>
+            <div>
+                <label>Last Name</label>
+                <input type="text" name="lname" placeholder="e.g. Ahmed">
+            </div>
 
             <!-- Email -->
-            <label>Email</label>
-            <input type="email" name="email" placeholder="e.g. sara@email.com" required>
+            <div>
+                <label>Email</label>
+                <input type="email" name="email" placeholder="e.g. sara@email.com">
+            </div>
 
             <!-- Mobile -->
-            <label>Mobile Number</label>
-           <input type="tel" name="mobile" placeholder="05XXXXXXXX" pattern="[0-9]{10}" required>
+            <div>
+                <label>Mobile Number</label>
+                <input type="text" name="mobile" placeholder="05XXXXXXXX">
+            </div>
 
             <!-- Date of Birth -->
-            <label>Date of Birth</label>
-            <input type="date" name="birthdate" required>
+            <div>
+                <label>Date of Birth</label>
+                <input type="date" name="birthdate">
+            </div>
 
             <!-- Gender -->
-            <label>Gender</label>
-            <div class="gender-group">
-                <label><input type="radio" name="gender" value="male" required> Male</label>
-                <label><input type="radio" name="gender" value="female"> Female</label>
+            <div>
+                <label>Gender</label>
+                <div class="gender-options">
+                    <label class="radio-label">
+                        <input type="radio" name="gender" value="male"> Male
+                    </label>
+
+                    <label class="radio-label">
+                        <input type="radio" name="gender" value="female"> Female
+                    </label>
+                </div>
             </div>
 
             <!-- Language -->
-            <label>Language of Communication</label>
-           <select name="language" required>
-                <option value="">Select language</option>
-                <option value="arabic">Arabic</option>
-                <option value="english">English</option>
-                <option value="french">French</option>
-            </select>
+            <div>
+                <label>Language of Communication</label>
+                <select name="language">
+                    <option value="">Select language</option>
+                    <option value="arabic">Arabic</option>
+                    <option value="english">English</option>
+                    <option value="french">French</option>
+                </select>
+            </div>
 
-            <!-- Message -->
-            <label>Message</label>
-           <textarea name="message" placeholder="Write your message here..." rows="5" required></textarea>
-             <p id="msg"></p>
+            <!-- Message (full width like register notes) -->
+            <div class="full-width">
+                <label>Message</label>
+                <textarea name="message" placeholder="Write your message here..." rows="5"></textarea>
+            </div>
+
+            <!-- Message result -->
+            <p id="msg" class="full-width"></p>
+
             <!-- Buttons -->
             <div class="form-buttons">
                 <button type="submit" class="btn">Send Message</button>
                 <button type="reset" class="btn">Reset</button>
             </div>
-            
+
         </form>
+
     </div>
 
 </section>
 
-<!-- Footer -->
+<!-- ================= FOOTER ================= -->
 <footer>
     <p>&copy; 2026 Craft Workshop</p>
 </footer>
+
 <script src="JS/script.js"></script>
 </body>
 </html>
