@@ -506,21 +506,6 @@ input[type="date"] {
     margin-top: 10px;
 }
 
-
-/* ================= REQUIRED FIELD STAR ================= */
-
-/* Add a red star (*) after every label with class "required" */
-.required::after {
-    content: " *";
-    color: red;
-    font-weight: bold;
-}
-
-
-/* ================= OPTIONAL: SUCCESS MESSAGE COLOR ================= */
-
-/* You can change message color dynamically from JS,
-   but this is a default style if needed */
 .success {
     color: green;
     font-weight: bold;
