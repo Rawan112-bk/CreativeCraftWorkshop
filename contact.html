@@ -36,27 +36,25 @@
 
         <h2>Your Information</h2>
 
-        <form class="workshop-form">
-
+         <form class="workshop-form" id="contactForm" novalidate>
             <!-- First Name -->
             <label>First Name</label>
-            <input type="text" placeholder="e.g. Sara" required>
-
+            <input type="text" name="fname" placeholder="e.g. Sara" required>
             <!-- Last Name -->
             <label>Last Name</label>
-            <input type="text" placeholder="e.g. Ahmed" required>
+           <input type="text" name="lname" placeholder="e.g. Ahmed" required>
 
             <!-- Email -->
             <label>Email</label>
-            <input type="email" placeholder="e.g. sara@email.com" required>
+            <input type="email" name="email" placeholder="e.g. sara@email.com" required>
 
             <!-- Mobile -->
             <label>Mobile Number</label>
-            <input type="tel" placeholder="05XXXXXXXX" pattern="[0-9]{10}" required>
+           <input type="tel" name="mobile" placeholder="05XXXXXXXX" pattern="[0-9]{10}" required>
 
             <!-- Date of Birth -->
             <label>Date of Birth</label>
-            <input type="date" required>
+            <input type="date" name="birthdate" required>
 
             <!-- Gender -->
             <label>Gender</label>
@@ -67,7 +65,7 @@
 
             <!-- Language -->
             <label>Language of Communication</label>
-            <select required>
+           <select name="language" required>
                 <option value="">Select language</option>
                 <option value="arabic">Arabic</option>
                 <option value="english">English</option>
@@ -76,14 +74,14 @@
 
             <!-- Message -->
             <label>Message</label>
-            <textarea placeholder="Write your message here..." rows="5" required></textarea>
-
+           <textarea name="message" placeholder="Write your message here..." rows="5" required></textarea>
+             <p id="msg"></p>
             <!-- Buttons -->
             <div class="form-buttons">
                 <button type="submit" class="btn">Send Message</button>
                 <button type="reset" class="btn">Reset</button>
             </div>
-
+            
         </form>
     </div>
 
@@ -93,6 +91,6 @@
 <footer>
     <p>&copy; 2026 Craft Workshop</p>
 </footer>
-
+<script src="JS/script.js"></script>
 </body>
 </html>
