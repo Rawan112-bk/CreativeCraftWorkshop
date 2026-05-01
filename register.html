@@ -9,28 +9,23 @@
 
 <body>
 
-<!-- Navigation -->
+<!-- ================= NAVIGATION ================= -->
 <nav class="navbar">
     <div class="logo">Craft Workshop</div>
-    <ul class="nav-links">
-        <li><a href="index.html">Home</a></li>
-        <li><a href="workshops.html">Workshops</a></li>
-        <li><a href="booking.html">Booking</a></li>
-        <li><a href="contact.html">Contact</a></li>
-    </ul>
 </nav>
 
-<!-- Booking Title -->
+<!-- ================= HEADER ================= -->
 <section class="booking-header">
-    <h1>Workshop Booking</h1>
+    <h1 id="bookingTitle">Workshop Booking</h1>
 </section>
 
-<!-- Form Section -->
+<!-- ================= FORM ================= -->
 <section class="form-section">
 
     <div class="form-box">
 
-        <span class="btn back-btn">← Back</span>
+        <!-- Back Button -->
+        <span class="btn back-btn" id="backBtn">← Back</span>
 
         <div class="info-box">
             <p>Fill in your details to reserve your spot in the workshop.</p>
@@ -38,47 +33,67 @@
 
         <h2>Your Personal Information</h2>
 
-        <form class="workshop-form">
-
-            <!-- Full Name -->
-            <label>Full Name</label>
-            <input type="text" placeholder="e.g. Sara Ahmed" required minlength="3">
-
-            <!-- Email -->
-            <label>Email</label>
-            <input type="email" placeholder="e.g. sara@email.com" required>
-
-            <!-- Mobile -->
-            <label>Mobile Number</label>
-            <input type="tel" placeholder="e.g. 05XXXXXXXX" pattern="[0-9]{10}" required>
+        <form id="registerForm" class="workshop-form" novalidate>
 
             <!-- Workshop -->
-            <label>Workshop</label>
-            <select required>
-                <option value="">Select a workshop</option>
-                <option value="candle">Candle Making</option>
-                <option value="pottery">Pottery Workshop</option>
-                <option value="painting">Painting Workshop</option>
-            </select>
+            <div>
+                <label>Workshop</label>
+                <input type="text" id="workshopDisplay" name="workshopDisplay"
+                       placeholder="Workshop will appear here" readonly>
+            </div>
+
+            <!-- Full Name -->
+            <div>
+                <label>Full Name</label>
+                <input type="text" name="fullname" placeholder="e.g. Sara Ahmed">
+            </div>
+
+            <!-- Email -->
+            <div>
+                <label>Email</label>
+                <input type="email" name="registeremail" placeholder="e.g. sara@email.com">
+            </div>
+
+            <!-- Mobile -->
+            <div>
+                <label>Mobile Number</label>
+                <input type="text" name="registermobile" placeholder="05XXXXXXXX">
+            </div>
 
             <!-- Gender -->
-            <label>Gender</label>
-            <div class="gender-group">
-                <label><input type="radio" name="gender" value="male" required> Male</label>
-                <label><input type="radio" name="gender" value="female"> Female</label>
+            <div>
+                <label>Gender</label>
+                <div class="gender-options">
+                    <label class="radio-label">
+                        <input type="radio" name="gender" value="male"> Male
+                    </label>
+
+                    <label class="radio-label">
+                        <input type="radio" name="gender" value="female"> Female
+                    </label>
+                </div>
             </div>
 
             <!-- Date -->
-            <label>Preferred Date</label>
-            <input type="date" required>
+            <div>
+                <label>Preferred Date</label>
+                <input type="date" name="workshopdate">
+            </div>
 
             <!-- Time -->
-            <label>Preferred Time</label>
-            <input type="time" required>
+            <div>
+                <label>Preferred Time</label>
+                <input type="time" name="workshoptime">
+            </div>
 
-            <!-- Notes -->
-            <label>Additional Notes</label>
-            <textarea placeholder="Any special requests..."></textarea>
+            <!-- Notes (full width like contact page textarea) -->
+            <div class="full-width">
+                <label>Additional Notes</label>
+                <textarea name="notes" placeholder="Any special requests..."></textarea>
+            </div>
+
+            <!-- Message -->
+            <p id="registerMsg" class="full-width"></p>
 
             <!-- Buttons -->
             <div class="form-buttons">
@@ -87,14 +102,16 @@
             </div>
 
         </form>
+
     </div>
 
 </section>
 
-<!-- Footer -->
+<!-- ================= FOOTER ================= -->
 <footer>
     <p>&copy; 2026 Craft Workshop</p>
 </footer>
 
+<script src="JS/script.js"></script>
 </body>
 </html>
