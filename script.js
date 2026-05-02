@@ -1,4 +1,3 @@
-
 // ================= CONTACT FORM =================
 
 const contactForm = document.querySelector("#contactForm");
@@ -12,6 +11,12 @@ if (contactForm) {
 
         let messages = [];
 
+        //  HTML validation
+        if (!contactForm.checkValidity()) {
+            contactForm.reportValidity();
+        }
+
+        //  JavaScript validation
         messages = isFilled("fname", messages, "First name is missing");
         messages = isName("fname", messages, "First name must contain letters only");
 
@@ -32,17 +37,18 @@ if (contactForm) {
         messages = isFilled("message", messages, "Message is missing");
         messages = isLength("message", 10, messages, "Message must be at least 10 characters");
 
+
         if (messages.length > 0) {
             msg.style.color = "red";
-            msg.innerHTML = "Issues found [" + messages.length + "]: " + messages.join(", ");
+            msg.innerHTML = "Issues found [" + messages.length + "]:<br>" + messages.join("<br>");
         } else {
             msg.style.color = "green";
-            msg.innerHTML = "Form submitted successfully ";
+            msg.innerHTML = "Form submitted successfully";
         }
 
     });
 
-    // Reset contact form message
+    // Reset message
     contactForm.querySelector('button[type="reset"]')
         ?.addEventListener('click', () => msg.innerHTML = "");
 }
@@ -61,6 +67,12 @@ if (registerForm) {
 
         let messages = [];
 
+        // HTML validation
+        if (!registerForm.checkValidity()) {
+            registerForm.reportValidity();
+        }
+
+        // JavaScript validation
         messages = isFilled("fullname", messages, "Full name is missing");
         messages = isName("fullname", messages, "Full name must contain letters only");
 
@@ -73,17 +85,18 @@ if (registerForm) {
         messages = isFilled("workshopdate", messages, "Date is missing");
         messages = isFilled("workshoptime", messages, "Time is missing");
 
+
         if (messages.length > 0) {
             registerMsg.style.color = "red";
-            registerMsg.innerHTML = "Issues found [" + messages.length + "]: " + messages.join(", ");
+            registerMsg.innerHTML = "Issues found [" + messages.length + "]:<br>" + messages.join("<br>");
         } else {
             registerMsg.style.color = "green";
-            registerMsg.innerHTML = "Booking submitted successfully ";
+            registerMsg.innerHTML = "Booking submitted successfully";
         }
 
     });
 
-    // Reset register form message
+    // Reset message
     registerForm.querySelector('button[type="reset"]')
         ?.addEventListener('click', () => registerMsg.innerHTML = "");
 }
@@ -94,10 +107,7 @@ if (registerForm) {
 const backBtn = document.getElementById("backBtn");
 
 if (backBtn) {
-
     backBtn.addEventListener("click", () => {
-
-        // go back to workshops page
         window.location.href = "workshops.html";
     });
 }
@@ -113,12 +123,10 @@ if (type) {
     const workshopDisplay = document.getElementById("workshopDisplay");
     const bookingTitle = document.getElementById("bookingTitle");
 
-    // Show workshop name in input
     if (workshopDisplay) {
         workshopDisplay.value = type;
     }
 
-    // Change header text
     if (bookingTitle) {
 
         if (type === "candle") {
@@ -147,12 +155,12 @@ function isFilled(name, messages, msg) {
 }
 
 function isEmail(name, messages, msg) {
-    if (!getValue(name).match(/^[a-z0-9]+@[a-z]+\.[a-z]{2,4}$/)) messages.push(msg);
+    if (!getValue(name).match(/^[^@]+@[^@]+\.[^@]+$/)) messages.push(msg);
     return messages;
 }
 
 function isMobile(name, messages, msg) {
-    if (!getValue(name).match(/^[0-9]{10}$/)) messages.push(msg);
+    if (!getValue(name).match(/^05[0-9]{8}$/)) messages.push(msg);
     return messages;
 }
 
