@@ -24,7 +24,6 @@
 
     <div class="form-box">
 
-        <!-- Back Button -->
         <span class="btn back-btn" id="backBtn">← Back</span>
 
         <div class="info-box">
@@ -35,67 +34,60 @@
 
         <form id="registerForm" class="workshop-form" novalidate>
 
-            <!-- Workshop -->
             <div>
                 <label>Workshop</label>
                 <input type="text" id="workshopDisplay" name="workshopDisplay"
                        placeholder="Workshop will appear here" readonly>
             </div>
 
-            <!-- Full Name -->
             <div>
                 <label>Full Name</label>
-                <input type="text" name="fullname" placeholder="e.g. Sara Ahmed">
+                <input type="text" name="fullname" placeholder="e.g. Sara Ahmed"
+                required minlength="5" maxlength="40" pattern="[A-Za-z ]+">
             </div>
 
-            <!-- Email -->
             <div>
                 <label>Email</label>
-                <input type="email" name="registeremail" placeholder="e.g. sara@email.com">
+                <input type="email" name="registeremail" placeholder="e.g. sara@email.com"
+                required maxlength="50">
             </div>
 
-            <!-- Mobile -->
             <div>
                 <label>Mobile Number</label>
-                <input type="text" name="registermobile" placeholder="05XXXXXXXX">
+                <input type="tel" name="registermobile" placeholder="05XXXXXXXX"
+                required pattern="05[0-9]{8}">
             </div>
 
-            <!-- Gender -->
             <div>
                 <label>Gender</label>
                 <div class="gender-options">
                     <label class="radio-label">
-                        <input type="radio" name="gender" value="male"> Male
+                        <input type="radio" name="gender" value="male" required> Male
                     </label>
 
                     <label class="radio-label">
-                        <input type="radio" name="gender" value="female"> Female
+                        <input type="radio" name="gender" value="female" required> Female
                     </label>
                 </div>
             </div>
 
-            <!-- Date -->
             <div>
                 <label>Preferred Date</label>
-                <input type="date" name="workshopdate">
+                <input type="date" name="workshopdate" required>
             </div>
 
-            <!-- Time -->
             <div>
                 <label>Preferred Time</label>
-                <input type="time" name="workshoptime">
+                <input type="time" name="workshoptime" required>
             </div>
 
-            <!-- Notes (full width like contact page textarea) -->
             <div class="full-width">
                 <label>Additional Notes</label>
-                <textarea name="notes" placeholder="Any special requests..."></textarea>
+                <textarea name="notes" minlength="5" maxlength="200"></textarea>
             </div>
 
-            <!-- Message -->
             <p id="registerMsg" class="full-width"></p>
 
-            <!-- Buttons -->
             <div class="form-buttons">
                 <button type="submit" class="btn">Submit</button>
                 <button type="reset" class="btn">Reset</button>
@@ -107,7 +99,6 @@
 
 </section>
 
-<!-- ================= FOOTER ================= -->
 <footer>
     <p>&copy; 2026 Craft Workshop</p>
 </footer>
@@ -115,3 +106,4 @@
 <script src="script.js"></script>
 </body>
 </html>
+
