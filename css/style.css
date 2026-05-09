@@ -48,7 +48,7 @@ nav{
 
 /* ===== Hero ===== */
 .hero{
-    background:url("Media/workshop.jpg") center/cover no-repeat;
+    background:url("../Media/workshop.jpg") center/cover no-repeat;
     height:500px;
     display:flex;
     justify-content:center;
