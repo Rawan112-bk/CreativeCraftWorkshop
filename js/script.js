@@ -11,12 +11,10 @@ if (contactForm) {
 
         let messages = [];
 
-        //  HTML validation
         if (!contactForm.checkValidity()) {
             contactForm.reportValidity();
         }
 
-        //  JavaScript validation
         messages = isFilled("fname", messages, "First name is missing");
         messages = isName("fname", messages, "First name must contain letters only");
 
@@ -31,12 +29,14 @@ if (contactForm) {
 
         messages = isFilled("birthdate", messages, "Birth date is missing");
 
+        //  FIXED (form scoped)
+        messages = isRadioSelected("gender", contactForm, messages, "Gender must be selected");
+
         const languageList = ['arabic', 'english', 'french'];
         messages = isWhiteListed("language", languageList, messages, "Language selection is invalid");
 
         messages = isFilled("message", messages, "Message is missing");
         messages = isLength("message", 10, messages, "Message must be at least 10 characters");
-
 
         if (messages.length > 0) {
             msg.style.color = "red";
@@ -48,7 +48,6 @@ if (contactForm) {
 
     });
 
-    // Reset message
     contactForm.querySelector('button[type="reset"]')
         ?.addEventListener('click', () => msg.innerHTML = "");
 }
@@ -67,12 +66,10 @@ if (registerForm) {
 
         let messages = [];
 
-        // HTML validation
         if (!registerForm.checkValidity()) {
             registerForm.reportValidity();
         }
 
-        // JavaScript validation
         messages = isFilled("fullname", messages, "Full name is missing");
         messages = isName("fullname", messages, "Full name must contain letters only");
 
@@ -85,6 +82,8 @@ if (registerForm) {
         messages = isFilled("workshopdate", messages, "Date is missing");
         messages = isFilled("workshoptime", messages, "Time is missing");
 
+        // FIXED (form scoped)
+        messages = isRadioSelected("gender", registerForm, messages, "Gender must be selected");
 
         if (messages.length > 0) {
             registerMsg.style.color = "red";
@@ -96,7 +95,6 @@ if (registerForm) {
 
     });
 
-    // Reset message
     registerForm.querySelector('button[type="reset"]')
         ?.addEventListener('click', () => registerMsg.innerHTML = "");
 }
@@ -144,9 +142,17 @@ if (type) {
 
 // ================= VALIDATION FUNCTIONS =================
 
-function getValue(name) {
-    const el = document.getElementsByName(name)[0];
-    return el ? el.value.trim() : "";
+function getValue(name, form = document) {
+    const elements = form.getElementsByName(name);
+
+    if (!elements || elements.length === 0) return "";
+
+    if (elements[0].type === "radio") {
+        const checked = form.querySelector(`input[name="${name}"]:checked`);
+        return checked ? checked.value : "";
+    }
+
+    return elements[0].value.trim();
 }
 
 function isFilled(name, messages, msg) {
@@ -176,5 +182,12 @@ function isWhiteListed(name, list, messages, msg) {
 
 function isLength(name, min, messages, msg) {
     if (getValue(name).length < min) messages.push(msg);
+    return messages;
+}
+
+//  FIXED RADIO VALIDATION (FORM SCOPED)
+function isRadioSelected(name, form, messages, msg) {
+    const checked = form.querySelector(`input[name="${name}"]:checked`);
+    if (!checked) messages.push(msg);
     return messages;
 }
