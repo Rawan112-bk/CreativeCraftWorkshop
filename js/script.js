@@ -42,8 +42,29 @@ if (contactForm) {
             msg.style.color = "red";
             msg.innerHTML = "Issues found [" + messages.length + "]:<br>" + messages.join("<br>");
         } else {
-            msg.style.color = "green";
-            msg.innerHTML = "Form submitted successfully";
+            const formData = new FormData(contactForm);
+            const data = Object.fromEntries(formData);
+            fetch('http://localhost:3000/contact', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(result => {
+                if (result.error) {
+                    msg.style.color = "red";
+                    msg.innerHTML = result.error;
+                } else {
+                    msg.style.color = "green";
+                    msg.innerHTML = result.success;
+                }
+            })
+            .catch(error => {
+                msg.style.color = "red";
+                msg.innerHTML = "Error: " + error.message;
+            });
         }
 
     });
@@ -89,8 +110,35 @@ if (registerForm) {
             registerMsg.style.color = "red";
             registerMsg.innerHTML = "Issues found [" + messages.length + "]:<br>" + messages.join("<br>");
         } else {
-            registerMsg.style.color = "green";
-            registerMsg.innerHTML = "Booking submitted successfully";
+            const data = {
+                fullname: registerForm.fullname.value,
+                email: registerForm.registeremail.value,
+                mobile: registerForm.registermobile.value,
+                gender: registerForm.gender.value,
+                date: registerForm.workshopdate.value,
+                time: registerForm.workshoptime.value
+            };
+            fetch('http://localhost:3000/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(result => {
+                if (result.error) {
+                    registerMsg.style.color = "red";
+                    registerMsg.innerHTML = result.error;
+                } else {
+                    registerMsg.style.color = "green";
+                    registerMsg.innerHTML = result.success;
+                }
+            })
+            .catch(error => {
+                registerMsg.style.color = "red";
+                registerMsg.innerHTML = "Error: " + error.message;
+            });
         }
 
     });
