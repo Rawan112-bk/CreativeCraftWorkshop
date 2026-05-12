@@ -1,5 +1,5 @@
-CREATE DATABASE IF NOT EXISTS creative_craft_workshop;
-USE creative_craft_workshop;
+CREATE DATABASE IF NOT EXISTS creativecraft;
+USE creativecraft;
 
 CREATE TABLE IF NOT EXISTS contact_messages (
     id INT AUTO_INCREMENT PRIMARY KEY,
