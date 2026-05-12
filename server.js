@@ -1,5 +1,4 @@
 // ================= CREATIVE CRAFT WORKSHOP BACKEND =================
-// Follows CCSW321 Part 6: Node.js + Express + MySQL database operations
 
 const express = require('express');
 const mysql = require('mysql2');
@@ -20,8 +19,6 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
 // ================= DATABASE CONNECTION SETTINGS =================
-// These settings match MAMP MySQL in the lecture slides.
-// If your MySQL uses different settings, change them here.
 const dbConfig = {
     host: "localhost",
     user: "root",
