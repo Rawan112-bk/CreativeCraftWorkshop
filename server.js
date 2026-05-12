@@ -1,241 +1,227 @@
-// ================= CONTACT FORM =================
+// ================= CREATIVE CRAFT WORKSHOP BACKEND =================
+// Follows CCSW321 Part 6: Node.js + Express + MySQL database operations
 
-const contactForm = document.querySelector("#contactForm");
-const msg = document.querySelector("#msg");
+const express = require('express');
+const mysql = require('mysql2');
+const { check, validationResult } = require('express-validator');
+const path = require('path');
 
-if (contactForm) {
+const app = express();
+const PORT = 2500;
 
-    contactForm.addEventListener('submit', e => {
+// Static routing: serve HTML, CSS, JS and media files
+app.use('/', express.static(path.join(__dirname, 'html ')));
+app.use('/css', express.static(path.join(__dirname, 'css')));
+app.use('/js', express.static(path.join(__dirname, 'js')));
+app.use('/Media', express.static(path.join(__dirname, 'Media')));
 
-        e.preventDefault();
+// HTML form routing: parse form body from POST requests
+app.use(express.urlencoded({ extended: false }));
+app.use(express.json());
 
-        let messages = [];
+// ================= DATABASE CONNECTION SETTINGS =================
+// These settings match MAMP MySQL in the lecture slides.
+// If your MySQL uses different settings, change them here.
+const dbConfig = {
+    host: "localhost",
+    user: "root",
+    password: "root",
+    port: 8889,
+    database: "creativecraft"
+};
 
-        if (!contactForm.checkValidity()) {
-            contactForm.reportValidity();
+function openConnection() {
+    return mysql.createConnection(dbConfig);
+}
+
+// ================= VALIDATION RULES =================
+function contactValidation() {
+    return [
+        check('fname').isLength({ min: 2, max: 20 }).withMessage('First name must be between 2 and 20 characters.').isAlpha().withMessage('First name must contain letters only.').trim().escape(),
+        check('lname').isLength({ min: 2, max: 20 }).withMessage('Last name must be between 2 and 20 characters.').isAlpha().withMessage('Last name must contain letters only.').trim().escape(),
+        check('email').isEmail().withMessage('Email format is invalid.').normalizeEmail(),
+        check('mobile').matches(/^05[0-9]{8}$/).withMessage('Mobile number must start with 05 and contain 10 digits.').trim().escape(),
+        check('birthdate').notEmpty().withMessage('Birth date is required.').trim().escape(),
+        check('gender').isIn(['male', 'female']).withMessage('Gender must be selected from the provided list.').trim().escape(),
+        check('language').isIn(['arabic', 'english', 'french']).withMessage('Language must be selected from the provided list.').trim().escape(),
+        check('message').isLength({ min: 10, max: 200 }).withMessage('Message must be between 10 and 200 characters.').trim().escape()
+    ];
+}
+
+function registrationValidation() {
+    return [
+        check('workshopDisplay').isIn(['candle', 'pottery', 'painting']).withMessage('Workshop must be selected from the workshops page.').trim().escape(),
+        check('fullname').isLength({ min: 5, max: 40 }).withMessage('Full name must be between 5 and 40 characters.').matches(/^[A-Za-z ]+$/).withMessage('Full name must contain letters and spaces only.').trim().escape(),
+        check('registeremail').isEmail().withMessage('Email format is invalid.').normalizeEmail(),
+        check('registermobile').matches(/^05[0-9]{8}$/).withMessage('Mobile number must start with 05 and contain 10 digits.').trim().escape(),
+        check('gender').isIn(['male', 'female']).withMessage('Gender must be selected from the provided list.').trim().escape(),
+        check('workshopdate').notEmpty().withMessage('Preferred date is required.').trim().escape(),
+        check('workshoptime').notEmpty().withMessage('Preferred time is required.').trim().escape(),
+        check('notes').optional({ checkFalsy: true }).isLength({ min: 5, max: 200 }).withMessage('Notes must be between 5 and 200 characters.').trim().escape()
+    ];
+}
+
+function printErrors(errors, returnLink) {
+    let html = pageHeader('Validation Errors');
+    html += '<h1>Sorry, we found validation errors with your submission</h1><ul>';
+    errors.array().forEach(error => {
+        html += `<li>${error.msg}</li>`;
+    });
+    html += `</ul><p><a href="${returnLink}">Click here</a> to return.</p>`;
+    html += pageFooter();
+    return html;
+}
+
+// ================= INSERT FUNCTIONS =================
+function addContact(data, response) {
+    const db = openConnection();
+
+    db.connect(function (err) {
+        if (err) {
+            response.send(databaseError(err));
+            return;
         }
 
-        messages = isFilled("fname", messages, "First name is missing");
-        messages = isName("fname", messages, "First name must contain letters only");
+        const sql = `INSERT INTO contact_messages
+            (fname, lname, email, mobile, birthdate, gender, language, message)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
 
-        messages = isFilled("lname", messages, "Last name is missing");
-        messages = isName("lname", messages, "Last name must contain letters only");
+        const values = [data.fname, data.lname, data.email, data.mobile, data.birthdate, data.gender, data.language, data.message];
 
-        messages = isFilled("email", messages, "Email is missing");
-        messages = isEmail("email", messages, "Email format is wrong");
+        db.query(sql, values, function (err) {
+            db.end();
+            if (err) {
+                response.send(databaseError(err));
+            } else {
+                response.redirect('/contact-data?success=contact');
+            }
+        });
+    });
+}
 
-        messages = isFilled("mobile", messages, "Mobile is missing");
-        messages = isMobile("mobile", messages, "Mobile must contain 10 numbers");
+function addRegistration(data, response) {
+    const db = openConnection();
 
-        messages = isFilled("birthdate", messages, "Birth date is missing");
+    db.connect(function (err) {
+        if (err) {
+            response.send(databaseError(err));
+            return;
+        }
 
-        //  FIXED (form scoped)
-        messages = isRadioSelected("gender", contactForm, messages, "Gender must be selected");
+        const sql = `INSERT INTO workshop_registrations
+            (workshop, fullname, email, mobile, gender, workshop_date, workshop_time, notes)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
 
-        const languageList = ['arabic', 'english', 'french'];
-        messages = isWhiteListed("language", languageList, messages, "Language selection is invalid");
+        const values = [data.workshopDisplay, data.fullname, data.registeremail, data.registermobile, data.gender, data.workshopdate, data.workshoptime, data.notes || ''];
 
-        messages = isFilled("message", messages, "Message is missing");
-        messages = isLength("message", 10, messages, "Message must be at least 10 characters");
+        db.query(sql, values, function (err) {
+            db.end();
+            if (err) {
+                response.send(databaseError(err));
+            } else {
+                response.redirect('/registration-data?success=registration');
+            }
+        });
+    });
+}
 
-        if (messages.length > 0) {
-            msg.style.color = "red";
-            msg.innerHTML = "Issues found [" + messages.length + "]:<br>" + messages.join("<br>");
-        } else {
-            const formData = new FormData(contactForm);
-            const data = Object.fromEntries(formData);
-            fetch('/contact', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(data)
-            })
-            .then(response => response.json())
-            .then(result => {
-                if (result.error) {
-                    msg.style.color = "red";
-                    msg.innerHTML = result.error;
-                } else {
-                    msg.style.color = "green";
-                    msg.innerHTML = result.success;
-                }
-            })
-            .catch(error => {
-                msg.style.color = "red";
-                msg.innerHTML = "Error: " + error.message;
+// ================= POST ROUTES =================
+app.post('/contact', contactValidation(), function (request, response) {
+    const errors = validationResult(request);
+    if (!errors.isEmpty()) {
+        response.send(printErrors(errors, '/contact.html'));
+    } else {
+        addContact(request.body, response);
+    }
+});
+
+app.post('/register', registrationValidation(), function (request, response) {
+    const errors = validationResult(request);
+    if (!errors.isEmpty()) {
+        response.send(printErrors(errors, '/register.html'));
+    } else {
+        addRegistration(request.body, response);
+    }
+});
+
+// ================= SELECT ROUTES =================
+app.get('/contact-data', function (request, response) {
+    const db = openConnection();
+    db.connect(function (err) {
+        if (err) {
+            response.send(databaseError(err));
+            return;
+        }
+
+        const sql = 'SELECT * FROM contact_messages ORDER BY id DESC';
+        db.query(sql, function (err, rows) {
+            db.end();
+            if (err) {
+                response.send(databaseError(err));
+                return;
+            }
+
+            let html = pageHeader('Contact Messages');
+            if (request.query.success) html += '<h1>Thank you, we got your message!</h1>';
+            html += '<h2>Saved Contact Messages</h2>';
+            html += '<table><tr><th>ID</th><th>Name</th><th>Email</th><th>Mobile</th><th>Gender</th><th>Language</th><th>Message</th><th>Date</th></tr>';
+            rows.forEach(row => {
+                html += `<tr><td>${row.id}</td><td>${row.fname} ${row.lname}</td><td>${row.email}</td><td>${row.mobile}</td><td>${row.gender}</td><td>${row.language}</td><td>${row.message}</td><td>${row.created_at}</td></tr>`;
             });
-        }
-
+            html += '</table><p><a href="/contact.html">Back to Contact Form</a></p>';
+            html += pageFooter();
+            response.send(html);
+        });
     });
+});
 
-    contactForm.querySelector('button[type="reset"]')
-        ?.addEventListener('click', () => msg.innerHTML = "");
-}
-
-
-// ================= REGISTER FORM =================
-
-const registerForm = document.querySelector("#registerForm");
-const registerMsg = document.querySelector("#registerMsg");
-
-if (registerForm) {
-
-    registerForm.addEventListener('submit', e => {
-
-        e.preventDefault();
-
-        let messages = [];
-
-        if (!registerForm.checkValidity()) {
-            registerForm.reportValidity();
+app.get('/registration-data', function (request, response) {
+    const db = openConnection();
+    db.connect(function (err) {
+        if (err) {
+            response.send(databaseError(err));
+            return;
         }
 
-        messages = isFilled("fullname", messages, "Full name is missing");
-        messages = isName("fullname", messages, "Full name must contain letters only");
+        const sql = 'SELECT * FROM workshop_registrations ORDER BY id DESC';
+        db.query(sql, function (err, rows) {
+            db.end();
+            if (err) {
+                response.send(databaseError(err));
+                return;
+            }
 
-        messages = isFilled("registeremail", messages, "Email is missing");
-        messages = isEmail("registeremail", messages, "Email format is wrong");
-
-        messages = isFilled("registermobile", messages, "Mobile is missing");
-        messages = isMobile("registermobile", messages, "Mobile must contain 10 numbers");
-
-        messages = isFilled("workshopdate", messages, "Date is missing");
-        messages = isFilled("workshoptime", messages, "Time is missing");
-
-        // FIXED (form scoped)
-        messages = isRadioSelected("gender", registerForm, messages, "Gender must be selected");
-
-        if (messages.length > 0) {
-            registerMsg.style.color = "red";
-            registerMsg.innerHTML = "Issues found [" + messages.length + "]:<br>" + messages.join("<br>");
-        } else {
-            const data = {
-                fullname: registerForm.fullname.value,
-                email: registerForm.registeremail.value,
-                mobile: registerForm.registermobile.value,
-                gender: registerForm.gender.value,
-                date: registerForm.workshopdate.value,
-                time: registerForm.workshoptime.value
-            };
-            fetch('/register', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(data)
-            })
-            .then(response => response.json())
-            .then(result => {
-                if (result.error) {
-                    registerMsg.style.color = "red";
-                    registerMsg.innerHTML = result.error;
-                } else {
-                    registerMsg.style.color = "green";
-                    registerMsg.innerHTML = result.success;
-                }
-            })
-            .catch(error => {
-                registerMsg.style.color = "red";
-                registerMsg.innerHTML = "Error: " + error.message;
+            let html = pageHeader('Workshop Registrations');
+            if (request.query.success) html += '<h1>Thank you, your registration has been saved!</h1>';
+            html += '<h2>Saved Workshop Registrations</h2>';
+            html += '<table><tr><th>ID</th><th>Workshop</th><th>Name</th><th>Email</th><th>Mobile</th><th>Gender</th><th>Date</th><th>Time</th><th>Notes</th></tr>';
+            rows.forEach(row => {
+                html += `<tr><td>${row.id}</td><td>${row.workshop}</td><td>${row.fullname}</td><td>${row.email}</td><td>${row.mobile}</td><td>${row.gender}</td><td>${row.workshop_date}</td><td>${row.workshop_time}</td><td>${row.notes}</td></tr>`;
             });
-        }
-
+            html += '</table><p><a href="/workshops.html">Back to Workshops</a></p>';
+            html += pageFooter();
+            response.send(html);
+        });
     });
+});
 
-    registerForm.querySelector('button[type="reset"]')
-        ?.addEventListener('click', () => registerMsg.innerHTML = "");
+// ================= PAGE HELPERS =================
+function pageHeader(title) {
+    return `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>${title}</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <style>body{padding:30px}.data-page{max-width:1200px;margin:auto}table{width:100%;border-collapse:collapse;background:white}th,td{border:1px solid #ddd;padding:10px;text-align:left}th{background:#f4f4f4}a{color:#7b4b2a;font-weight:bold}</style>
+    </head><body><main class="data-page">`;
 }
 
-
-// ================= BACK BUTTON =================
-
-const backBtn = document.getElementById("backBtn");
-
-if (backBtn) {
-    backBtn.addEventListener("click", () => {
-        window.location.href = "workshops.html";
-    });
+function pageFooter() {
+    return '</main></body></html>';
 }
 
-
-// ================= AUTO WORKSHOP DISPLAY =================
-
-const params = new URLSearchParams(window.location.search);
-const type = params.get("type");
-
-if (type) {
-
-    const workshopDisplay = document.getElementById("workshopDisplay");
-    const bookingTitle = document.getElementById("bookingTitle");
-
-    if (workshopDisplay) {
-        workshopDisplay.value = type;
-    }
-
-    if (bookingTitle) {
-
-        if (type === "candle") {
-            bookingTitle.innerText = "Candle Making Booking";
-        } else if (type === "pottery") {
-            bookingTitle.innerText = "Pottery Workshop Booking";
-        } else if (type === "painting") {
-            bookingTitle.innerText = "Painting Workshop Booking";
-        } else {
-            bookingTitle.innerText = "Workshop Booking";
-        }
-    }
+function databaseError(err) {
+    return pageHeader('Database Error') + `<h1>Database Error</h1><p>${err.message}</p><p>Check that MySQL/MAMP is running and that you imported database.sql.</p><p><a href="/index.html">Back Home</a></p>` + pageFooter();
 }
 
-
-// ================= VALIDATION FUNCTIONS =================
-
-function getValue(name, form = document) {
-    const elements = form.getElementsByName(name);
-
-    if (!elements || elements.length === 0) return "";
-
-    if (elements[0].type === "radio") {
-        const checked = form.querySelector(`input[name="${name}"]:checked`);
-        return checked ? checked.value : "";
-    }
-
-    return elements[0].value.trim();
-}
-
-function isFilled(name, messages, msg) {
-    if (getValue(name).length < 1) messages.push(msg);
-    return messages;
-}
-
-function isEmail(name, messages, msg) {
-    if (!getValue(name).match(/^[^@]+@[^@]+\.[^@]+$/)) messages.push(msg);
-    return messages;
-}
-
-function isMobile(name, messages, msg) {
-    if (!getValue(name).match(/^05[0-9]{8}$/)) messages.push(msg);
-    return messages;
-}
-
-function isName(name, messages, msg) {
-    if (!getValue(name).match(/^[A-Za-z ]+$/)) messages.push(msg);
-    return messages;
-}
-
-function isWhiteListed(name, list, messages, msg) {
-    if (!list.includes(getValue(name))) messages.push(msg);
-    return messages;
-}
-
-function isLength(name, min, messages, msg) {
-    if (getValue(name).length < min) messages.push(msg);
-    return messages;
-}
-
-//  FIXED RADIO VALIDATION (FORM SCOPED)
-function isRadioSelected(name, form, messages, msg) {
-    const checked = form.querySelector(`input[name="${name}"]:checked`);
-    if (!checked) messages.push(msg);
-    return messages;
-}
+// ================= START SERVER =================
+app.listen(PORT, function () {
+    console.log('Server is running on http://localhost:' + PORT);
+});
