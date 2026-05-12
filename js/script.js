@@ -58,7 +58,7 @@ if (contactForm) {
                     msg.innerHTML = result.error;
                 } else {
                     msg.style.color = "green";
-                    msg.innerHTML = result.success;
+                    msg.innerHTML = result.message;
                 }
             })
             .catch(error => {
@@ -111,12 +111,14 @@ if (registerForm) {
             registerMsg.innerHTML = "Issues found [" + messages.length + "]:<br>" + messages.join("<br>");
         } else {
             const data = {
+                workshopDisplay: registerForm.workshopDisplay.value,
                 fullname: registerForm.fullname.value,
-                email: registerForm.registeremail.value,
-                mobile: registerForm.registermobile.value,
+                registeremail: registerForm.registeremail.value,
+                registermobile: registerForm.registermobile.value,
                 gender: registerForm.gender.value,
-                date: registerForm.workshopdate.value,
-                time: registerForm.workshoptime.value
+                workshopdate: registerForm.workshopdate.value,
+                workshoptime: registerForm.workshoptime.value,
+                notes: registerForm.notes.value
             };
             fetch('http://localhost:3000/register', {
                 method: 'POST',
@@ -132,7 +134,7 @@ if (registerForm) {
                     registerMsg.innerHTML = result.error;
                 } else {
                     registerMsg.style.color = "green";
-                    registerMsg.innerHTML = result.success;
+                    registerMsg.innerHTML = result.message;
                 }
             })
             .catch(error => {
