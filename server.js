@@ -7,7 +7,7 @@ const { check, validationResult } = require('express-validator');
 const path = require('path');
 
 const app = express();
-const PORT = 2500;
+const PORT = 3000;
 
 // Static routing: serve HTML, CSS, JS and media files
 app.use('/', express.static(path.join(__dirname, 'html ')));
@@ -29,6 +29,16 @@ const dbConfig = {
     port: 8889,
     database: "creativecraft"
 };
+const db = mysql.createConnection(dbConfig);
+
+db.connect((err) => {
+  if (err) {
+    console.error("Database connection failed:", err.message);
+    return;
+  }
+
+  console.log("Database connected successfully");
+}); 
 
 function openConnection() {
     return mysql.createConnection(dbConfig);
@@ -93,7 +103,10 @@ function addContact(data, response) {
             if (err) {
                 response.send(databaseError(err));
             } else {
-                response.redirect('/contact-data?success=contact');
+                response.json({
+                 success: true,
+                message: "Contact message saved successfully"
+});
             }
         });
     });
@@ -119,7 +132,10 @@ function addRegistration(data, response) {
             if (err) {
                 response.send(databaseError(err));
             } else {
-                response.redirect('/registration-data?success=registration');
+                response.json({
+                      success: true,
+                    message: "Workshop registration saved successfully"
+});
             }
         });
     });
@@ -129,7 +145,9 @@ function addRegistration(data, response) {
 app.post('/contact', contactValidation(), function (request, response) {
     const errors = validationResult(request);
     if (!errors.isEmpty()) {
-        response.send(printErrors(errors, '/contact.html'));
+        response.status(400).json({
+        error: errors.array().map(error => error.msg).join("<br>")
+        });
     } else {
         addContact(request.body, response);
     }
@@ -138,7 +156,9 @@ app.post('/contact', contactValidation(), function (request, response) {
 app.post('/register', registrationValidation(), function (request, response) {
     const errors = validationResult(request);
     if (!errors.isEmpty()) {
-        response.send(printErrors(errors, '/register.html'));
+        response.status(400).json({
+        error: errors.array().map(error => error.msg).join("<br>")
+        });
     } else {
         addRegistration(request.body, response);
     }
